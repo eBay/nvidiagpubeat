@@ -19,6 +19,7 @@ package nvidia
 
 import (
 	"github.com/elastic/beats/libbeat/common"
+	"github.com/elastic/beats/libbeat/logp"
 )
 
 //GPUMetrics provides slice of metrics passed as argument for a given environment
@@ -41,6 +42,7 @@ func (m Metrics) Get(env string, query string) ([]common.MapStr, error) {
 	gpuCountCmd := gpuCount.command()
 	count, err := gpuCount.run(gpuCountCmd, env)
 	if err != nil {
+		logp.Err("Error %s . ", err)
 		return nil, err
 	}
 	gpuUtilization := newUtilization()
