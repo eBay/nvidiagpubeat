@@ -33,7 +33,8 @@ nvidiagpubeat provides ability (look at nvidiagpubeat.yml) to configure metrics 
 
 ## Getting Started with nvidiagpubeat
 
-### Requirements
+### Build on macOS
+#### Prerequisites
 
 * [Golang](https://golang.org/dl/) 1.7+
 * virtualenv - https://virtualenv.pypa.io/en/stable/
@@ -46,15 +47,22 @@ sudo pip install virtualenv
 brew install glide
 ```
 
-### Init Project
-To get running with nvidiagpubeat and also install the dependencies, run the following command:
+### Build on RedHat EL7
+#### Prerequisites
+```
+yum install python-virtualenv
+yum install golang
+```
+
+### Initialize Project
+Once the prerequisites have been installed, rest of the steps are common across OSes
+as `nvidiagpubeat` is written in Golang.
 
 ```
-#Use an empty directory
+#Start with an empty directory
 mkdir beats_dev
 
-
-#Build with elastic beats branch=6.5 (Master branch might not always uptodate).
+#Build with elastic beats branch=6.5 (Master branch might not always upto-date).
 export WORKSPACE=`pwd`/beats_dev
 export GOPATH=$WORKSPACE
 git clone https://github.com/elastic/beats ${GOPATH}/src/github.com/elastic/beats --branch 6.5
@@ -69,30 +77,12 @@ cd $WORKSPACE/src/github.com/ebay/nvidiagpubeat/
 make setup
 make
 ```
-Above instructions will generate a binary in the same directory with the name nvidiagpubeat.
+Above instructions will generate a binary in the same directory with the name `nvidiagpubeat`.
 
-It will create a clean git history for each major step. Note that you can always rewrite the history if you wish before pushing your changes. To push nvidiagpubeat in the git repository, run the following commands:
+### Run in production environment
 
-```
-git remote set-url origin https://github.com/eBay/nvidiagpubeat.git
-git push origin master
-```
-
-For further development, check out the [beat developer guide](https://www.elastic.co/guide/en/beats/libbeat/current/new-beat.html).
-
-### Build
-
-Make changes (if any) and build the binary for nvidiagpubeat run the command below. This will generate a binary
-in the same directory with the name nvidiagpubeat.
-
-```
-make
-```
-
-### Run in production
-
-To run nvidiagpubeat with pre-installed nvidia-smi that is available in PATH, switch to "test" environment 
-in nvidiagpubeat.yml and use 
+To run nvidiagpubeat with pre-installed nvidia-smi that is available in PATH, switch to "test" environment
+in nvidiagpubeat.yml and use
 
 ```yaml
 env: "production"
@@ -103,11 +93,11 @@ export PATH=$PATH:.
 ./nvidiagpubeat -c nvidiagpubeat.yml -e -d "*" -E seccomp.enabled=false
 ```
 
-`seccomp.enabled` setting : nvidiagpubeat uses libbeat framework. For security purposes the libbeat framework by default 
-drops the ability to fork/exec. As nvidiagpubeat executes `nvidia-smi`, security setting must be disabled by 
+`seccomp.enabled` setting : nvidiagpubeat uses libbeat framework. For security purposes the libbeat framework by default
+drops the ability to fork/exec. As nvidiagpubeat executes `nvidia-smi`, security setting must be disabled by
 setting through command line.
 
-### Run in test (macOS)
+### Run in test environment (macOS)
 To run nvidiagpubeat with pre-packaged `localnvidiasmi` switch to "test" environment in nvidiagpubeat.yml and use
 ```yaml
 env: "test"
@@ -118,7 +108,7 @@ export PATH=$PATH:.
 ./nvidiagpubeat -c nvidiagpubeat.yml -e -d "*" -E seccomp.enabled=false
 ```
 
-localnvidiasmi executable built for macOS and is a mock GPU event generator. 
+localnvidiasmi executable built for macOS and is a mock GPU event generator.
 
 
 ### Sample event
@@ -159,6 +149,15 @@ Publish event: {
 }
 ```
 
+### Build
+
+Make changes (if any) and build the binary for nvidiagpubeat run the command below. This will generate a binary
+in the same directory with the name `nvidiagpubeat`.
+
+```
+make
+```
+
 ### Test cases
 
 To test nvidiagpubeat, run the following command:
@@ -190,38 +189,12 @@ To clone nvidiagpubeat from the git repository, run the following commands:
 mkdir -p ${GOPATH}/github.com/ebay
 cd ${GOPATH}/github.com/ebay
 git clone git@github.com:eBay/nvidiagpubeat.git
+cd nvidiagpubeat
+git remote add upstream git@github.com:eBay/nvidiagpubeat.git
 ```
+
 For further development, check out the [beat developer guide](https://www.elastic.co/guide/en/beats/libbeat/current/new-beat.html).
 
-
-### Build nvidiagpubeat on RedHat EL7
-
-Here below the speps to build nvidiagpubeat binary on a RedHat EL7 system
-
-
-#### Software requirements installation
-
-```
-yum install python-virtualenv
-yum install golang
-```
-#### Actual build
-
-```
-cd ~
-mkdir beats_dev
-export WORKSPACE=`pwd`/beats_dev
-export GOPATH=$WORKSPACE
-git clone https://github.com/elastic/beats ${GOPATH}/src/github.com/elastic/beats --branch 6.5
-mkdir -p $WORKSPACE/src/github.com/ebay
-cd $WORKSPACE/src/github.com/ebay/
-git clone https://github.com/eBay/nvidiagpubeat.git
-cd nvidiagpubeat
-make copy-vendor
-make
-ls -l nvidiagpubeat
--rwxr-xr-x 1 user user 36862632  7 feb 09.04 nvidiagpubeat
-```
 
 ### License
 Copyright 2016-2018 eBay Inc.
