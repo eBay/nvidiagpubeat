@@ -193,6 +193,36 @@ git clone git@github.com:eBay/nvidiagpubeat.git
 ```
 For further development, check out the [beat developer guide](https://www.elastic.co/guide/en/beats/libbeat/current/new-beat.html).
 
+
+### Build nvidiagpubeat on RedHat EL7
+
+Here below the speps to build nvidiagpubeat binary on a RedHat EL7 system
+
+
+#### Software requirements installation
+
+```
+yum install python-virtualenv
+yum install golang
+```
+#### Actual build
+
+```
+cd ~
+mkdir beats_dev
+export WORKSPACE=`pwd`/beats_dev
+export GOPATH=$WORKSPACE
+git clone https://github.com/elastic/beats ${GOPATH}/src/github.com/elastic/beats --branch 6.5
+mkdir -p $WORKSPACE/src/github.com/ebay
+cd $WORKSPACE/src/github.com/ebay/
+git clone https://github.com/eBay/nvidiagpubeat.git
+cd nvidiagpubeat
+make copy-vendor
+make
+ls -l nvidiagpubeat
+-rwxr-xr-x 1 user user 36862632  7 feb 09.04 nvidiagpubeat
+```
+
 ### License
 Copyright 2016-2018 eBay Inc.
 Architect/Developer: Deepak Vasthimal
