@@ -60,8 +60,8 @@ export GOPATH=$WORKSPACE
 git clone https://github.com/elastic/beats ${GOPATH}/src/github.com/elastic/beats --branch 6.5
 
 #Clone nvidiagpubeat
-mkdir $WORKSPACE/src/github.com/eBay
-cd $WORKSPACE/src/github.com/eBay
+mkdir $WORKSPACE/src/github.com/ebay
+cd $WORKSPACE/src/github.com/ebay
 git clone git@github.com:eBay/nvidiagpubeat.git
 
 #Build
@@ -89,55 +89,77 @@ in the same directory with the name nvidiagpubeat.
 make
 ```
 
-### Run
+### Run in production
 
-To run nvidiagpubeat in test environment with debugging output enabled, run:
+To run nvidiagpubeat with pre-installed nvidia-smi that is available in PATH, switch to "test" environment 
+in nvidiagpubeat.yml and use 
 
+```yaml
+env: "production"
 ```
+
+```bash
 export PATH=$PATH:.
-./nvidiagpubeat -c nvidiagpubeat.yml -e -d "*"
+./nvidiagpubeat -c nvidiagpubeat.yml -e -d "*" -E seccomp.enabled=false
 ```
-nvidiagpubeat.yml contains env set to "test". This will run localnvidiasmi utility instead of nvidia-smi. Switch
-env=production to use pre-installed nvidia-smi utility on a GPU machine.
 
+`seccomp.enabled` setting : nvidiagpubeat uses libbeat framework. For security purposes the libbeat framework by default 
+drops the ability to fork/exec. As nvidiagpubeat executes `nvidia-smi`, security setting must be disabled by 
+setting through command line.
+
+### Run in test (macOS)
+To run nvidiagpubeat with pre-packaged `localnvidiasmi` switch to "test" environment in nvidiagpubeat.yml and use
+```yaml
+env: "test"
+```
+
+```bash
+export PATH=$PATH:.
+./nvidiagpubeat -c nvidiagpubeat.yml -e -d "*" -E seccomp.enabled=false
+```
+
+localnvidiasmi executable built for macOS and is a mock GPU event generator. 
+
+
+### Sample event
 Below is a sample event emitted by nvidiagpubeat.
 
 ```
 Publish event: {
-  "@timestamp": "2018-12-12T02:01:40.670Z",
+  "@timestamp": "2019-02-07T00:39:08.814Z",
   "@metadata": {
     "beat": "nvidiagpubeat",
-    "type": "_doc",
-    "version": "7.0.0"
+    "type": "doc",
+    "version": "6.5.5"
   },
-  "utilization": {
-    "gpu": 4,
-    "memory": 40
-  },
-  "temperature": {
-    "gpu": 27
+  "gpuIndex": 3,
+  "memory": {
+    "total": 11448,
+    "free": 479,
+    "used": 10969
   },
   "host": {
-    "name": "LM-SJL-11004865"
+    "name": "hostname.company.com"
   },
-  "pstate": 8,
-  "@timestamp": "2018-12-12T02:01:40.669Z",
-  "gpuIndex": 3,
+  "temperature": {
+    "gpu": 64
+  },
+  "pstate": 0,
+  "@timestamp": "2019-02-07T00:39:08.811Z",
   "type": "nvidiagpubeat",
-  "memory": {
-    "total": 6082,
-    "free": 6082,
-    "used": 0
+  "utilization": {
+    "gpu": 15,
+    "memory": 12
   },
-  "agent": {
-    "type": "nvidiagpubeat",
-    "hostname": "LM-SJL-11004865",
-    "version": "7.0.0"
+  "beat": {
+    "version": "6.5.5",
+    "name": "hostname.company.com",
+    "hostname": "hostname.company.com"
   }
 }
 ```
 
-### Test
+### Test cases
 
 To test nvidiagpubeat, run the following command:
 
@@ -165,8 +187,8 @@ To remove them dependent libraries, builds, temporary files, files created durin
 To clone nvidiagpubeat from the git repository, run the following commands:
 
 ```
-mkdir -p ${GOPATH}/github.com/eBay
-cd ${GOPATH}/github.com/eBay
+mkdir -p ${GOPATH}/github.com/ebay
+cd ${GOPATH}/github.com/ebay
 git clone git@github.com:eBay/nvidiagpubeat.git
 ```
 For further development, check out the [beat developer guide](https://www.elastic.co/guide/en/beats/libbeat/current/new-beat.html).
