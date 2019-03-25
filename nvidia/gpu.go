@@ -24,7 +24,6 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/elastic/beats/libbeat/common"
 )
@@ -84,9 +83,8 @@ func (g Utilization) run(cmd *exec.Cmd, gpuCount int, query string, action Actio
 		}
 		headers := strings.Split(query, ",")
 		event := common.MapStr{
-			"@timestamp": common.Time(time.Now()),
-			"gpuIndex":   gpuIndex,
-			"type":       "nvidiagpubeat",
+			"gpuIndex": gpuIndex,
+			"type":     "nvidiagpubeat",
 		}
 		for i := 0; i < len(record); i++ {
 			value, _ := strconv.Atoi(record[i])
