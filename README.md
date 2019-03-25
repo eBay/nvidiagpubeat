@@ -116,36 +116,35 @@ Below is a sample event emitted by nvidiagpubeat.
 
 ```
 Publish event: {
-  "@timestamp": "2019-02-07T00:39:08.814Z",
+  "@timestamp": "2019-03-25T15:34:17.739Z",
   "@metadata": {
     "beat": "nvidiagpubeat",
     "type": "doc",
     "version": "6.5.5"
   },
-  "gpuIndex": 3,
+  "utilization": {
+    "gpu": 4,
+    "memory": 40
+  },
   "memory": {
-    "total": 11448,
-    "free": 479,
-    "used": 10969
+    "used": 0,
+    "total": 6082,
+    "free": 6082
+  },
+  "temperature": {
+    "gpu": 27
+  },
+  "pstate": 8,
+  "beat": {
+    "name": "hostname.company.com",
+    "hostname": "hostname.company.com",
+    "version": "6.5.5"
   },
   "host": {
     "name": "hostname.company.com"
   },
-  "temperature": {
-    "gpu": 64
-  },
-  "pstate": 0,
-  "@timestamp": "2019-02-07T00:39:08.811Z",
-  "type": "nvidiagpubeat",
-  "utilization": {
-    "gpu": 15,
-    "memory": 12
-  },
-  "beat": {
-    "version": "6.5.5",
-    "name": "hostname.company.com",
-    "hostname": "hostname.company.com"
-  }
+  "gpuIndex": 3,
+  "type": "nvidiagpubeat"
 }
 ```
 
