@@ -194,6 +194,16 @@ git remote add upstream git@github.com:eBay/nvidiagpubeat.git
 
 For further development, check out the [beat developer guide](https://www.elastic.co/guide/en/beats/libbeat/current/new-beat.html).
 
+### Testimonials
+I would love to hear about your use case. It will help me improve `nvidiagpubeat`. Please add few lines about 
+your use case, affiliation and location. All fields are optional. 
+
+Use Case: 
+
+Country:
+
+Affiliation:
+ 
 
 ### License
 Copyright 2016-2018 eBay Inc.
