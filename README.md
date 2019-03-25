@@ -198,9 +198,9 @@ For further development, check out the [beat developer guide](https://www.elasti
 I would love to hear about your use case. It will help me improve `nvidiagpubeat`. Please add few lines about 
 your use case, affiliation and location. All fields are optional. 
 
-Use Case: 
+Use Case: I am running deeplearning models on a headless linux machine. Therefore, it is essential for me to track my gpu load and related stats.
 
-Country:
+Country: Germany
 
 Affiliation:
  
