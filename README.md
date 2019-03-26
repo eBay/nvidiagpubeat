@@ -202,9 +202,9 @@ your use case, affiliation and location. All fields are optional.
 
    Country: Germany
    
-   Full Name:
+   Full Name: Julius Zimmermann
    
-   Affiliation:
+   Affiliation: Student
  
 2. Use Case:  
 
