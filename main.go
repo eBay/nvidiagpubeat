@@ -24,11 +24,14 @@ import (
 	"os"
 
 	"github.com/elastic/beats/libbeat/cmd"
+	"github.com/elastic/beats/libbeat/cmd/instance"
 
 	"github.com/ebay/nvidiagpubeat/beater"
 )
 
-var RootCmd = cmd.GenRootCmd("nvidiagpubeat", "", beater.New)
+//var RootCmd = cmd.GenRootCmd("nvidiagpubeat", "", beater.New)
+//With Beats7.x new RootCmd
+var RootCmd = cmd.GenRootCmdWithSettings(beater.New, instance.Settings{Name: "nvidiagpubeat"})
 
 func main() {
 	if err := RootCmd.Execute(); err != nil {
