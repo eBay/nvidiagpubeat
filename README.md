@@ -77,6 +77,31 @@ cd $WORKSPACE/src/github.com/ebay/nvidiagpubeat/
 make setup
 make
 ```
+### nvidiagpubeat and beats compatibility
+To keep `nvidiagpubeat` compatible with upcoming versions of `beats`, `nvidiagpubeat` will be branched out beacause
+at times `beats` does make breaking changes across major releases. For instance between `beats 6.x` and `beats 7.x`, the
+`cmd.GenRootCmd` is broken.
+
+| beats version| nvidiagpubeat branch|
+|---|---|
+| 6.x | master |
+| 7.x | withBeats7.3 |
+
+For instance to use 7.3 version of `beats` and compatible `nvidiagpubeat`, perform following actions before compilation.
+
+```
+#Build with elastic beats branch=6.5 (Master branch might not always upto-date).
+export WORKSPACE=`pwd`/beats_dev
+export GOPATH=$WORKSPACE
+git clone https://github.com/elastic/beats ${GOPATH}/src/github.com/elastic/beats --branch 7.3
+
+#Clone nvidiagpubeat
+mkdir $WORKSPACE/src/github.com/ebay
+cd $WORKSPACE/src/github.com/ebay
+git clone git@github.com:eBay/nvidiagpubeat.git --branch withBeats7.3
+```
+
+
 Above instructions will generate a binary in the same directory with the name `nvidiagpubeat`.
 
 ### Run in production environment
@@ -195,33 +220,33 @@ git remote add upstream git@github.com:eBay/nvidiagpubeat.git
 For further development, check out the [beat developer guide](https://www.elastic.co/guide/en/beats/libbeat/current/new-beat.html).
 
 ### Testimonials
-I would love to hear about your use case. It will help me improve `nvidiagpubeat`. Please add few lines about 
-your use case, affiliation and location. All fields are optional. 
+I would love to hear about your use case. It will help me improve `nvidiagpubeat`. Please add few lines about
+your use case, affiliation and location. All fields are optional.
 
 1. Use Case: I am running deeplearning models on a headless linux machine. Therefore, it is essential for me to track my gpu load and related stats.
 
    Country: Germany
-   
+
    Full Name: Julius Zimmermann
-   
+
    Affiliation: Student
- 
+
 2. Use Case:  
 
-   Country: 
-   
+   Country:
+
    Full Name:
-   
+
    Affiliation:
- 
+
 3. Use Case:  
 
-   Country: 
-   
+   Country:
+
    Full Name:
-   
+
    Affiliation:
- 
+
 
 ### License
 Copyright 2016-2018 eBay Inc.
