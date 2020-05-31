@@ -39,7 +39,7 @@ func newCount() Count {
 }
 
 func (g Count) command() *exec.Cmd {
-	cmd := "ls /dev | grep nvidia | grep -v nvidia-uvm | grep -v nvidiactl | wc -l"
+	cmd := "ls /dev | grep nvidia | grep -v nvidia-uvm | grep -v nvidiactl | grep -v modese | wc -l"
 	return exec.Command("bash", "-c", cmd)
 }
 
