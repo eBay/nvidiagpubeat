@@ -26,6 +26,7 @@ import (
 	"strings"
 
 	"github.com/elastic/beats/libbeat/common"
+	"github.com/elastic/beats/libbeat/logp"
 )
 
 //GPUUtilization provides interface to utilization metrics and state of GPU.
@@ -53,6 +54,7 @@ func (g Utilization) command(env string, query string) *exec.Cmd {
 //Run the nvidiasmi command to collect GPU metrics
 //Parse output and return events.
 func (g Utilization) run(cmd *exec.Cmd, gpuCount int, query string, action Action) ([]common.MapStr, error) {
+	logp.Info("Running query:  %s  with gpuCount %d", query, gpuCount)
 	reader := action.start(cmd)
 	gpuIndex := 0
 	events := make([]common.MapStr, gpuCount, 2*gpuCount)
@@ -73,7 +75,9 @@ func (g Utilization) run(cmd *exec.Cmd, gpuCount int, query string, action Actio
 		// Remove units put by nvidia-smi
 		line = strings.Replace(line, " %", "", -1)
 		line = strings.Replace(line, " MiB", "", -1)
+		line = strings.Replace(line, " MHz", "", -1)
 		line = strings.Replace(line, " P", "", -1)
+		line = strings.Replace(line, " W", "", -1)
 		line = strings.Replace(line, " ", "", -1)
 
 		r := csv.NewReader(strings.NewReader(line))
@@ -86,9 +90,14 @@ func (g Utilization) run(cmd *exec.Cmd, gpuCount int, query string, action Actio
 			"gpuIndex": gpuIndex,
 			"type":     "nvidiagpubeat",
 		}
-		for i := 0; i < len(record); i++ {
-			value, _ := strconv.Atoi(record[i])
-			event.Put(headers[i], value)
+		for i := 0; i < len(record) && i < len(headers); i++ {
+			rawValue := record[i]
+			iValue, err := strconv.ParseFloat(record[i], 64)
+			if err == nil {
+				event.Put(headers[i], iValue)
+			} else {
+				event.Put(headers[i], rawValue)
+			}
 		}
 		events[gpuIndex] = event
 		gpuIndex++

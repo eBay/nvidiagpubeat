@@ -203,6 +203,7 @@ To remove them dependent libraries, builds, temporary files, files created durin
  rm -rf nvidiagpubeat
  rm -rf nvidiagpubeat.test
  rm -rf vendor
+ rm -rf logs
 ```
 
 ### Clone

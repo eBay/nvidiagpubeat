@@ -19,6 +19,8 @@ package nvidia
 import (
 	"bufio"
 	"os/exec"
+
+	"github.com/elastic/beats/libbeat/logp"
 )
 
 //Action provides interface to start execution of a command
@@ -37,7 +39,10 @@ func NewLocal() Local {
 
 //Start starts cmd and returns reader object that contains output of command
 func (local Local) start(cmd *exec.Cmd) *bufio.Reader {
-	stdout, _ := cmd.StdoutPipe()
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		logp.Err("Error executing cmd, error: %s", err.Error())
+	}
 	cmd.Start()
 	return bufio.NewReader(stdout)
 }

@@ -40,11 +40,13 @@ func NewMetrics() Metrics {
 func (m Metrics) Get(env string, query string) ([]common.MapStr, error) {
 	gpuCount := newCount()
 	gpuCountCmd := gpuCount.command()
+	logp.Debug("nvidiagpubeat", "Determine number of gpu cards.")
 	count, err := gpuCount.run(gpuCountCmd, env)
 	if err != nil {
 		logp.Err("Error %s . ", err)
 		return nil, err
 	}
+	logp.Debug("nvidiagpubeat", "Number of gpu cards %d.", count)
 	gpuUtilization := newUtilization()
 	gpuUtilizationCmd := gpuUtilization.command(env, query)
 	events, err := gpuUtilization.run(gpuUtilizationCmd, count, query, NewLocal())
