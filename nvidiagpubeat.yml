@@ -25,7 +25,13 @@
 nvidiagpubeat:
   # Defines how often an event is sent to the output
   period: 1s
-  query: "name,driver_version,count,index,fan.speed,memory.total,memory.used,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,clocks.gr,clocks.sm,clocks.mem,pstate"
+  # By default the query of type query-gpu is executed to support backward compatibility
+  #query: "name,gpu_bus_id,gpu_serial,gpu_uuid,driver_version,count,index,fan.speed,memory.total,memory.used,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,clocks.gr,clocks.sm,clocks.mem,pstate"
+  # A generic version of query is supported by nvidiagpubeat for query options like --query-gpu,--query-compute-apps and others.
+  # -query-gpu will provide information about GPU.
+  #query: "--query-gpu=name,gpu_bus_id,gpu_serial,gpu_uuid,driver_version,count,index,fan.speed,memory.total,memory.used,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,clocks.gr,clocks.sm,clocks.mem,pstate"
+  # --query-compute-apps will list currently active compute processes.
+  query: "--query-compute-apps=gpu_name,gpu_bus_id,gpu_serial,gpu_uuid,pid,process_name,used_gpu_memory,used_memory"
   env: "test"
   # env can be test or production. test is for test purposes to evaluate funcationality of this beat. Switch to production
   # when you want to run this beat on a Nvidia GPU machine with SMI driver installed.
