@@ -25,7 +25,7 @@
 nvidiagpubeat:
   # Defines how often an event is sent to the output
   period: 1s
-  query: "utilization.gpu,utilization.memory,memory.total,memory.free,memory.used,temperature.gpu,pstate"
+  query: "--query-gpu=name,gpu_bus_id,gpu_serial,gpu_uuid,driver_version,count,index,fan.speed,memory.total,memory.used,utilization.gpu,utilization.memory,temperature.gpu,power.draw,power.limit,clocks.gr,clocks.sm,clocks.mem,pstate"
   env: "test"
 
 #================================ General ======================================
