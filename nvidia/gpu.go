@@ -46,26 +46,38 @@ func newUtilization() Utilization {
 
 func (g Utilization) command(env string, query string) *exec.Cmd {
 	if env == "test" {
-		return exec.Command("localnvidiasmi")
+		if strings.Contains(query, "query-compute-apps") {
+			args := "query-compute-apps"
+			return exec.Command("localnvidiasmi", args)
+		} else {
+			return exec.Command("localnvidiasmi")
+		}
 	}
-	return exec.Command("nvidia-smi", "--query-gpu="+query, "--format=csv")
+
+	//For backward compatibility support the default query of --query-apps, if none is provided
+	if strings.Contains(query, "=") {
+		return exec.Command("nvidia-smi", query, "--format=csv")
+	} else {
+		return exec.Command("nvidia-smi", "--query-gpu="+query, "--format=csv")
+	}
 }
 
 //Run the nvidiasmi command to collect GPU metrics
 //Parse output and return events.
 func (g Utilization) run(cmd *exec.Cmd, gpuCount int, query string, action Action) ([]common.MapStr, error) {
-	logp.Info("Running query:  %s  with gpuCount %d", query, gpuCount)
+	logp.Info("Running command %s for query:  %s  with gpuCount %d", cmd, query, gpuCount)
 	reader := action.start(cmd)
 	gpuIndex := 0
 	events := make([]common.MapStr, gpuCount, 2*gpuCount)
 
 	for {
 		line, err := reader.ReadString('\n')
+
 		if err == io.EOF {
 			break
 		}
 		// Ignore header
-		if strings.Contains(line, "utilization") {
+		if strings.Contains(line, "utilization") || strings.Contains(line, "gpu_name") || strings.Contains(line, "gpu_uuid") {
 			continue
 		}
 		if len(line) == 0 {
@@ -85,7 +97,15 @@ func (g Utilization) run(cmd *exec.Cmd, gpuCount int, query string, action Actio
 		if err == io.EOF {
 			break
 		}
-		headers := strings.Split(query, ",")
+
+		var headers []string
+		if strings.Contains(query, "=") {
+			rawHeaders := strings.Split(query, "=")
+			headers = strings.Split(rawHeaders[1], ",")
+		} else {
+			headers = strings.Split(query, ",")
+		}
+
 		event := common.MapStr{
 			"gpuIndex": gpuIndex,
 			"type":     "nvidiagpubeat",

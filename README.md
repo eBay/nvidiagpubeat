@@ -133,43 +133,94 @@ export PATH=$PATH:.
 ./nvidiagpubeat -c nvidiagpubeat.yml -e -d "*" -E seccomp.enabled=false
 ```
 
-localnvidiasmi executable built for macOS and is a mock GPU event generator.
+localnvidiasmi executable built for macOS and is a mock GPU event generator that supports events for --query-compute-apps and --query-gpu. The executable is generated using nvidiasmilocal/localnvidiasmi.go file.
 
 
 ### Sample event
-Below is a sample event emitted by nvidiagpubeat.
+The file nvidiagpubeat.yml defines the beat `nvidiagpubeat` with multiple options for `query`. For example `query: "--query-gpu=` will provide information about GPU and `query: "--query-compute-apps=` will list currently active compute processes.
+
+The `--query-gpu` will generate below event by nvidiagpubeat.
 
 ```
-Publish event: {
-  "@timestamp": "2019-03-25T15:34:17.739Z",
+Publish event: Publish event: {
+  "@timestamp": "2021-01-03T07:27:16.080Z",
   "@metadata": {
     "beat": "nvidiagpubeat",
     "type": "doc",
     "version": "6.5.5"
   },
-  "utilization": {
-    "gpu": 4,
-    "memory": 40
-  },
+  "type": "nvidiagpubeat",
+  "gpu_uuid": "GPU-b884db58-6340-7969-a79f-b937f3583884",
+  "driver_version": "418.87.01",
+  "index": 3,
+  "gpu_serial": 3.20218176911e+11,
   "memory": {
-    "used": 0,
-    "total": 6082,
-    "free": 6082
+    "used": 3256,
+    "total": 16280
   },
-  "temperature": {
-    "gpu": 27
+  "name": "Tesla100-PCIE-16GB",
+  "host": {
+    "name": "AB-SJC-11111111"
   },
-  "pstate": 8,
+  "utilization": {
+    "memory": 50,
+    "gpu": 50
+  },
   "beat": {
-    "name": "hostname.company.com",
-    "hostname": "hostname.company.com",
+    "name": "AB-SJC-11111111",
+    "hostname": "AB-SJC-11111111",
     "version": "6.5.5"
   },
-  "host": {
-    "name": "hostname.company.com"
+  "pstate": 0,
+  "gpu_bus_id": "00000000:19:00.0",
+  "count": 4,
+  "fan": {
+    "speed": "[NotSupported]"
   },
   "gpuIndex": 3,
-  "type": "nvidiagpubeat"
+  "power": {
+    "draw": 25.28,
+    "limit": 250
+  },
+  "temperature": {
+    "gpu": 24
+  },
+  "clocks": {
+    "gr": 405,
+    "sm": 405,
+    "mem": 715
+  }
+}
+```
+
+The `--query-compute-apps` will generate below event by nvidiagpubeat.
+
+```
+Publish event: {
+  "@timestamp": "2021-01-03T07:29:53.633Z",
+  "@metadata": {
+    "beat": "nvidiagpubeat",
+    "type": "doc",
+    "version": "6.5.5"
+  },
+  "pid": 222414,
+  "process_name": "[NotFound]",
+  "used_gpu_memory": 10,
+  "gpu_bus_id": "00000000:19:00.0",
+  "gpu_serial": 3.20218176911e+11,
+  "beat": {
+    "name": "AB-SJC-11111111",
+    "hostname": "AB-SJC-11111111",
+    "version": "6.5.5"
+  },
+  "gpu_name": "Tesla100-PCIE-16GB",
+  "used_memory": 15,
+  "gpuIndex": 3,
+  "type": "nvidiagpubeat",
+  "gpu_uuid": "GPU-b884db58-6340-7969-a79f-b937f3583884",
+  "host": {
+    "name": "AB-SJC-11111111"
+  }
 }
 ```
 

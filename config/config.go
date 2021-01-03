@@ -33,6 +33,6 @@ type Config struct {
 
 var DefaultConfig = Config{
 	Period: 1 * time.Second,
-	Query:  "utilization.gpu,utilization.memory,memory.total,memory.free,memory.used,temperature.gpu,pstate",
+	Query:  "--query-gpu=utilization.gpu,utilization.memory,memory.total,memory.free,memory.used,temperature.gpu,pstate",
 	Env:    "local",
 }
