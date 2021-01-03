@@ -219,7 +219,7 @@ Publish event: {
   "type": "nvidiagpubeat",
   "gpu_uuid": "GPU-b884db58-6340-7969-a79f-b937f3583884",
   "host": {
-    "name": "LM-SJC-11004865"
+    "name": "AB-SJC-11111111"
   }
 }
 ```
